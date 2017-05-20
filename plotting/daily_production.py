@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 sys.path.append('../io/')
 import read_data 
 import accumulate
+import opt_habit
 
 
 def get_one_day(data, date, date_pos=0, data_pos=1, mult=1):
@@ -125,13 +126,39 @@ def consumption_data(filename, nofhouseholds):
         devices[device_id] =  devices[device_id] / (1000000) * nofhouseholds
         plt.plot(devices[device_id])
 
+def optimized_consumption_data(filename, nofhouseholds, step):
+    """ Computes optimizes habit and plots both the
+        regular and optimized consumption.
+
+    Parameters
+    ----------
+    filename : string
+        file with consumption data
+    nofhouseholds : int
+        factor to multiply consumption with.
+    step : int
+        optimization parameter used by super_simple_optimization.
+    """
+    data = filename
+
+    consum = accumulate.accumulate_household(data)
+    consum = consum / (1000000) * nofhouseholds
+
+    opt = opt_habit.super_simple_optimization(consum, step=step)
+
+    plt.plot(consum)
+    plt.plot(opt)
 
 if __name__ == '__main__':
     # Plot production data
-    production_data()
+    #production_data()
 
     # Plot consumption data
-    consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
-                      "debs_0_0.csv"), int(sys.argv[2]))
+    #consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
+    #                  "debs_0_0.csv"), int(sys.argv[2]))
+
+    # Optimized consumption
+    optimized_consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
+                                "debs_0_0.csv"), 10000, 10)
 
     plt.show()
