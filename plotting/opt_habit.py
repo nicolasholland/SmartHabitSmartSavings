@@ -128,8 +128,19 @@ def consumption_production():
     print("||R-OC|| = ", val)
 
 
-def get_difference(nofhouseholds, opt_param, date="01.09.2013"):
+def get_difference(nofhouseholds, opt_param,
+                   house_fn=("/home/dutchman/Daten/debs_challenge_2014/"
+                             "debs_0_0.csv"),
+                   date="01.09.2013"):
+    """ Helper function to compute difference between habits.
 
+    Parameters
+    ----------
+    nofhouseholds : int
+    opt_param : int
+    date : string
+        Default 01.09.2013
+    """
     day_data_set = []
     # Wind
     data = read_data.read_csv(("/home/dutchman/Daten/2013_energy_feed_in/"
@@ -153,8 +164,8 @@ def get_difference(nofhouseholds, opt_param, date="01.09.2013"):
     day_data_set.append(day_data)
 
     # Household 
-    house_fn = ("/home/dutchman/Daten/debs_challenge_2014/"
-                "debs_0_0.csv")
+    #house_fn = ("/home/dutchman/Daten/debs_challenge_2014/"
+    #            "debs_0_0.csv")
     consum = accumulate.accumulate_household(house_fn)
     consum = consum / (1000000) * nofhouseholds
 
