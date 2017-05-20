@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import csv
+import math
 import numpy as np
 
 sys.path.append('../io/')
@@ -27,9 +28,9 @@ def target_function(R, C):
     ret = 0
 
     for ind in xrange(len(R)):
-        ret += abs(R[ind] - C[ind])
+        ret += (R[ind] - C[ind])**2
 
-    return ret
+    return math.sqrt(ret)
 
 def super_simple_optimization(C, step=0):
     """ Optimizes the behaivour in the simplest way possible.
@@ -37,13 +38,53 @@ def super_simple_optimization(C, step=0):
     """
     ret = np.zeros(len(C))
 
-    for i in xrange(0, len(C)-step):
+    for i in xrange(0, len(C)-step - 1):
+        if i >= 97 or i + step >= 97:
+            continue
         ret[i] = C[i + step]
 
     for i in xrange(0, step):
-        ret[len(C) - step + i] = C[i]
+        ret[len(C) - step - 1 + i] = C[i]
 
     return ret
+
+def actual_optimization(R, C, start=-50, stepwidth=1, maxrange=50):
+    """ This function actually does some optimization.
+        (Looking at you super_simple_optimization)
+
+    Parameters
+    ----------
+    R : ndarray
+        renewable energy production
+    C : ndarray
+        Household energy consumption
+    start : int
+        define interval for parameter search
+    stepwidth : int
+        define stepwidth for parameter search
+    maxrange : int
+        define interval for parameter search
+
+    Returns
+    -------
+    best_step : int
+        optimal parameter for super_simple_optimization
+    minval : float
+    """
+    minval = target_function(R, C)
+    best_step = 0
+
+    for step in xrange(start, maxrange, stepwidth):
+        oc = super_simple_optimization(C, step=step)
+        val = target_function(R, oc)
+
+        print("%d %d %d %f"%(step, start, maxrange, val))
+
+        if val < minval:
+            minval = val
+            best_step = step
+
+    return best_step, minval
 
 def consumption_production():
     """ Compare renewable energy production with energy consumption.
@@ -74,13 +115,17 @@ def consumption_production():
     house_fn = ("/home/dutchman/Daten/debs_challenge_2014/"
                 "debs_0_0.csv")
     consum = accumulate.accumulate_household(house_fn)
-    consum = consum / (1000000) * 1
+    consum = consum / (1000000) * 10000
     day_data_set.append(consum)
 
     diff = target_function(day_data_set[2], day_data_set[3])
 
     print("||R-C|| = ", diff)
 
+    step, val = actual_optimization(day_data_set[2], day_data_set[3])
+
+    print("Optimal step: ", step)
+    print("||R-OC|| = ", val)
 
 if __name__ == '__main__':
     consumption_production()
