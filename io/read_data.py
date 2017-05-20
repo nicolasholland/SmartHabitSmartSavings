@@ -31,7 +31,6 @@ def read_csv(filename, skip=0, delimiter=';'):
             ret.append(row)
     return ret
 
-
 def epoch_to_datetime(seconds):
     """ Returns time object.
 
@@ -58,6 +57,13 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:
         print("__main__ reads csv file. (fow now =) )")
         sys.exit()
-    data = read_csv(sys.argv[1], 5)
-    print(data[0])
+    data = read_csv(sys.argv[1], delimiter=",")
+
+    wf = open('tdebs.csv', 'w')
+    writer = csv.writer(wf, delimiter=",")
+    for row in data:
+        tt = epoch_to_datetime(int(row[1]))
+        row[1] = "%d.%d.%d.%d.%d"%(tt.tm_mon, tt.tm_mday, tt.tm_hour,
+                                tt.tm_min, tt.tm_min)
+        writer.writerow(row)
 
