@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 
 sys.path.append('../io/')
 import read_data 
+import accumulate
+
 
 def get_one_day(data, date, date_pos=0, data_pos=1, mult=1):
     """ Get one day of the data.
@@ -63,7 +65,9 @@ def production_data():
     use with: <date> <Netzeinspeisung_2013> <Wind> <Solar>
     """
     # Netz
-    data = read_data.read_csv(sys.argv[2], skip=5)
+    data = read_data.read_csv(("/home/dutchman/Daten/2013_energy_feed_in/"
+                               "Netzeinspeisung_2013.csv"),
+                              skip=5)
     day_data = get_one_day(data, sys.argv[1], date_pos=0, data_pos=3,
                            mult=1000)
 
@@ -71,13 +75,17 @@ def production_data():
     day_data_set.append(day_data)
 
     # Wind
-    data = read_data.read_csv(sys.argv[3], skip=5)
+    data = read_data.read_csv(("/home/dutchman/Daten/2013_energy_feed_in/"
+                               "Windenergie_Hochrechnung_2013.csv"),
+                               skip=5)
     day_data = get_one_day(data, sys.argv[1], date_pos=0, data_pos=3,
                            mult=1000)
     day_data_set.append(day_data)
 
     # Solar
-    data = read_data.read_csv(sys.argv[4], skip=5)
+    data = read_data.read_csv(("/home/dutchman/Daten/2013_energy_feed_in/"
+                               "Solarenergie_Hochrechnung_2013.csv"),
+                              skip=5)
     day_data = get_one_day(data, sys.argv[1], date_pos=0, data_pos=3)
     day_data_set.append(day_data)
 
@@ -90,26 +98,34 @@ def production_data():
         plot_day(d)
 
 
-    plt.show()
 
-def consumption_data():
+def consumption_data(filename, nofhouseholds):
     """ This function plots a specific dataset:
     deb.org
+
+    Notes
+    -----
+    Consumption data is in Watt, we need it in MWatt.
+    That's why we multiply with 1000000.
 
     Examples
     --------
     use with: <date> <household>
     """
-    date = sys.argv[1]
-    data = sys.argv[2]
+    data = filename
 
-    data = read_data.read_csv(data, delimiter=';')
-    print(data[0][1])
-    print(read_data.epoch_to_datetime(int(data[0][1])))
+    consum = accumulate.accumulate_household(data)
+    consum = consum / (1000000) * nofhouseholds
+
+    plt.plot(consum)
+
 
 if __name__ == '__main__':
     # Plot production data
     #production_data()
 
     # Plot consumption data
-    consumption_data()
+    consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
+                      "debs_0_0.csv"), int(sys.argv[2]))
+
+    plt.show()
