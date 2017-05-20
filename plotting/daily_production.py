@@ -151,14 +151,14 @@ def optimized_consumption_data(filename, nofhouseholds, step):
 
 if __name__ == '__main__':
     # Plot production data
-    #production_data()
+    production_data()
 
     # Plot consumption data
-    #consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
-    #                  "debs_0_0.csv"), int(sys.argv[2]))
+    consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
+                      "debs_0_0.csv"), int(sys.argv[2]))
 
     # Optimized consumption
     optimized_consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
-                                "debs_0_0.csv"), 10000, 10)
+                                "debs_0_0.csv"), 10000, -12)
 
     plt.show()
