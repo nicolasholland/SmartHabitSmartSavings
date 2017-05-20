@@ -26,10 +26,27 @@ def accumulate_household(filename):
         ret[slot] += float(point[2])
         divisors[slot] += 1.
 
-    for slot in xrange(len(ret)):
-        if divisors[slot] < 1:
-            divisors[slot] = 1
-        ret[slot] /= divisors[slot]
+    return ret
+
+def accumulate_device(filename):
+    """ Accumulates values for every device in a numpy array.
+    """
+    data = read_data.read_csv(filename,delimiter=",")
+
+    ret = dict()
+    for point in data:
+        tt = read_data.epoch_to_datetime(int(point[1]))
+        device_id = int(point[4])
+
+        if device_id not in ret.keys():
+            ret[device_id] = np.zeros(97)
+
+        hh = tt.tm_hour
+        mm = tt.tm_min
+
+        slot = time_slots.time_to_slot(hh, mm)
+
+        ret[device_id][slot] += float(point[2])
 
     return ret
 

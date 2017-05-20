@@ -119,10 +119,16 @@ def consumption_data(filename, nofhouseholds):
 
     plt.plot(consum)
 
+    # plot devices
+    devices = accumulate.accumulate_device(filename)
+    for device_id in devices.keys():
+        devices[device_id] =  devices[device_id] / (1000000) * nofhouseholds
+        plt.plot(devices[device_id])
+
 
 if __name__ == '__main__':
     # Plot production data
-    #production_data()
+    production_data()
 
     # Plot consumption data
     consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
