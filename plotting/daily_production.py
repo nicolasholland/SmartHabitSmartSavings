@@ -92,5 +92,24 @@ def production_data():
 
     plt.show()
 
+def consumption_data():
+    """ This function plots a specific dataset:
+    deb.org
+
+    Examples
+    --------
+    use with: <date> <household>
+    """
+    date = sys.argv[1]
+    data = sys.argv[2]
+
+    data = read_data.read_csv(data, delimiter=';')
+    print(data[0][1])
+    print(read_data.epoch_to_datetime(int(data[0][1])))
+
 if __name__ == '__main__':
-    production_data()
+    # Plot production data
+    #production_data()
+
+    # Plot consumption data
+    consumption_data()
