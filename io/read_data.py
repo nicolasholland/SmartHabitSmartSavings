@@ -5,7 +5,7 @@ import csv
 import numpy as np
 #from matplotlib import pyplot as plt
 
-def read_csv(filename, skip=0):
+def read_csv(filename, skip=0, delimiter=';'):
     """ Read csv file and returns list.
 
     Parameters
@@ -23,7 +23,7 @@ def read_csv(filename, skip=0):
     c = 0
     ret = []
     with open(filename,'r') as csv_file:
-        reader = csv.reader(csv_file, delimiter=';')
+        reader = csv.reader(csv_file, delimiter=delimiter)
         for row in reader:
             if c < skip:
                 c += 1
