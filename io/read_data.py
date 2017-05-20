@@ -1,4 +1,36 @@
+import os
+import sys
 import time
+import csv
+import numpy as np
+#from matplotlib import pyplot as plt
+
+def read_csv(filename, skip=0):
+    """ Read csv file and returns list.
+
+    Parameters
+    ----------
+    filename : string
+    skip : int
+        how many header files shall be skipped. Default 0
+
+    Examples
+    --------
+    >>> data = read_csv("Netzeinspeisung_2013.csv", skip=5)
+    >>> data[0]
+    [01.01.2013', '00:00', '00:15', '12.361', '']
+    """
+    c = 0
+    ret = []
+    with open(filename,'r') as csv_file:
+        reader = csv.reader(csv_file, delimiter=';')
+        for row in reader:
+            if c < skip:
+                c += 1
+                continue
+            ret.append(row)
+    return ret
+
 
 def epoch_to_datetime(seconds):
     """ Returns time object.
@@ -21,3 +53,11 @@ def epoch_to_datetime(seconds):
         13
     """
     return time.gmtime(seconds)
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print("__main__ reads csv file. (fow now =) )")
+        sys.exit()
+    data = read_csv(sys.argv[1], 5)
+    print(data[0])
+
