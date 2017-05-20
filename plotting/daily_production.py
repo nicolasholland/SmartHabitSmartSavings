@@ -155,10 +155,10 @@ if __name__ == '__main__':
 
     # Plot consumption data
     consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
-                      "debs_0_0.csv"), int(sys.argv[2]))
+                      "debs_0_1.csv"), 10000)
 
     # Optimized consumption
-    optimized_consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
-                                "debs_0_0.csv"), 10000, -12)
+    #optimized_consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
+    #                            "debs_0_0.csv"), 10000, -12)
 
     plt.show()
