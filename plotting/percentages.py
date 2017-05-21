@@ -5,6 +5,7 @@ import csv
 import math
 import numpy as np
 
+from matplotlib import pyplot as plt
 import opt_habit
 
 def analytics(nofhouseholds):
@@ -22,13 +23,20 @@ def analytics(nofhouseholds):
 
     one_percent  = dRegularRenewable / 100
     savings = abs(dOptimizedRenewable - dRegularRenewable) / one_percent
-    devicesavings = dOptimizedDevices / one_percent
 
-    print("Savings: ", savings)
-    print("Device Savings: ", devicesavings)
+    return savings
     
-    # household 0_1
     
 
 if __name__ == '__main__':
-    analytics(100000)
+    s = [100, 1000, 10000, 100000]
+    a = [analytics(v) for v in s]
+
+    print(a)
+    sys.exit()
+
+    plt.plot(s, a)
+    plt.xlabel("Number of households")
+    plt.ylabel("Percentage of savings")
+    plt.title("Saving Potential by Number of Households.")
+    plt.show()

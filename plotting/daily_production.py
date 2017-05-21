@@ -95,8 +95,10 @@ def production_data():
     day_data_set.append(day_data)
 
     # plot data
-    for d in day_data_set:
-        plot_day(d)
+    plt.plot(day_data_set[0], label="Grid feed-in")
+    #plt.plot(day_data_set[1], label="Windpower")
+    #plt.plot(day_data_set[2], label="Photovoltaic")
+    plt.plot(day_data_set[3], label="Renewable")
 
 
 
@@ -118,7 +120,8 @@ def consumption_data(filename, nofhouseholds):
     consum = accumulate.accumulate_household(data)
     consum = consum / (1000000) * nofhouseholds
 
-    plt.plot(consum)
+    plt.plot(consum, label="20k households")
+    return
 
     # plot devices
     devices = accumulate.accumulate_device(filename)
@@ -146,19 +149,24 @@ def optimized_consumption_data(filename, nofhouseholds, step):
 
     opt = opt_habit.super_simple_optimization(consum, step=step)
 
-    plt.plot(consum)
-    plt.plot(opt)
+    plt.plot(consum, label="Non Optimized C.")
+    plt.plot(opt, label="Optimized C.")
 
 if __name__ == '__main__':
     # Plot production data
     production_data()
 
     # Plot consumption data
-    consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
-                      "debs_0_1.csv"), 10000)
+    #consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
+    #                  "debs_0_0.csv"), 20000)
 
     # Optimized consumption
-    #optimized_consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
-    #                            "debs_0_0.csv"), 10000, -12)
+    optimized_consumption_data(("/home/dutchman/Daten/debs_challenge_2014/"
+                                "debs_0_0.csv"),20000, -12)
+
+    plt.title("Energy Production vs. Consumption 01.09.2013")
+    plt.ylabel("Power [MW]")
+    plt.xlabel("15 min slots of the day [1 = 15']")
+    plt.legend(loc='upper right')
 
     plt.show()
